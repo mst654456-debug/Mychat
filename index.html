@@ -1,375 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>الشات</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --paper: #e7e4da;
-      --surface: #f8f7f3;
-      --ink: #1d2331;
-      --muted: #6b7180;
-      --brick: #b8462e;
-      --line: #cfcabb;
-    }
-    * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-    html, body { height: 100%; margin: 0; }
-    body {
-      font-family: 'IBM Plex Sans Arabic', Tahoma, sans-serif;
-      font-size: 16px;
-      color: var(--ink);
-      background: var(--paper);
-      display: grid;
-      place-items: center;
-    }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    button:disabled { opacity: 0.6; cursor: default; }
-    :focus-visible { outline: 2px solid var(--brick); outline-offset: 2px; }
-
-    .app {
-      width: 100%;
-      max-width: 460px;
-      height: 100%;
-      max-height: 760px;
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      border-inline: 1px solid var(--line);
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 18px;
-      border-bottom: 2px solid var(--ink);
-    }
-    header h1 { margin: 0; font-size: 20px; font-weight: 600; }
-    .head-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    #me { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .ghost {
-      background: none;
-      border: 1px solid var(--ink);
-      color: var(--ink);
-      border-radius: 4px;
-      padding: 4px 12px;
-    }
-
-    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-
-    #login {
-      justify-content: center;
-      gap: 12px;
-      padding: 32px 22px;
-    }
-    #login h2 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
-    #login input {
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--ink);
-    }
-    .primary {
-      padding: 12px;
-      background: var(--ink);
-      color: var(--surface);
-      border: none;
-      border-radius: 4px;
-    }
-    .text-btn {
-      align-self: center;
-      background: none;
-      border: none;
-      color: var(--brick);
-      padding: 6px;
-      text-decoration: underline;
-    }
-    .error { min-height: 22px; color: var(--brick); font-size: 14px; }
-
-    #messages {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      padding: 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .msg {
-      max-width: 78%;
-      padding: 8px 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      align-self: flex-end;
-      overflow-wrap: anywhere;
-    }
-    .msg.me {
-      align-self: flex-start;
-      background: var(--ink);
-      border-color: var(--ink);
-      color: var(--surface);
-    }
-    .msg .who { font-size: 13px; font-weight: 600; color: var(--brick); }
-    .msg.me .who { display: none; }
-    .msg .time { margin-top: 4px; font-size: 11px; color: var(--muted); }
-    .msg.me .time { color: #a9afbd; }
-
-    form#form {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 2px solid var(--ink);
-    }
-    form#form input {
-      flex: 1;
-      min-width: 0;
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--ink);
-    }
-    form#form button {
-      padding: 0 18px;
-      background: var(--brick);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-    }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#11121a">
+<title>شاتي الخاص</title>
+<style>
+:root{--bg:#11121a;--panel:#1c1e2b;--panel2:#252738;--text:#f5f4ff;--muted:#a7a8bb;--accent:#8978f5;--accent2:#6554d9;--line:#303246;--good:#56c69a;--warn:#f0bd69;--danger:#f07d88}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}.app{max-width:1050px;margin:auto;min-height:100vh;display:flex;flex-direction:column}.top{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);background:#151622;position:sticky;top:0;z-index:3}.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:bold}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#4e3db7);display:grid;place-items:center;font-size:20px}.status{font-size:12px;color:var(--good);font-weight:normal;margin-top:3px}.userline{font-size:12px;color:var(--muted);max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}main{flex:1;padding:20px 16px 96px}.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,1050px);display:grid;grid-template-columns:repeat(4,1fr);background:#191a27;border-top:1px solid var(--line);padding:8px 7px calc(8px + env(safe-area-inset-bottom));z-index:4}.tab{border:0;background:none;color:var(--muted);padding:7px 3px;border-radius:12px;font-size:12px;cursor:pointer}.tab span{display:block;font-size:21px;margin-bottom:3px}.tab.active{background:#302b50;color:#d9d3ff}.section{display:none}.section.active{display:block}.heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.heading h1{font-size:22px;margin:0}.sub,.muted{color:var(--muted);font-size:13px;line-height:1.7}.sub{margin-top:6px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:13px}.hero{text-align:center;padding:25px 15px;background:radial-gradient(circle at 50% 0,#34305c 0,#1d1e2c 60%)}.orb{width:70px;height:70px;border-radius:24px;background:#4d438e;display:grid;place-items:center;font-size:33px;margin:0 auto 13px}.hero h2{margin:0 0 8px;font-size:22px}.btn{border:0;border-radius:12px;background:var(--accent);color:white;padding:11px 14px;font-weight:bold;cursor:pointer}.btn:hover{background:var(--accent2)}.btn.secondary{background:#33354a;color:#e7e5ff}.btn.danger{background:#59313b;color:#ffd9de}.btn.small{padding:8px 10px;font-size:12px}.btn:disabled{opacity:.5;cursor:not-allowed}.field{width:100%;border:1px solid var(--line);background:#171925;color:var(--text);padding:12px;border-radius:12px;font:inherit;outline:none;min-width:0}.field:focus{border-color:var(--accent)}textarea.field{resize:vertical;min-height:80px}label{display:block;margin:12px 0 6px;color:#d5d4e3;font-size:13px}.row{display:flex;gap:8px;align-items:center}.row .field{flex:1}.hint{font-size:12px;color:var(--warn);line-height:1.7;margin-top:10px}.good{color:var(--good)}.list{display:flex;flex-direction:column;gap:9px}.item{display:flex;align-items:center;gap:11px;text-align:right;width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:15px;padding:12px;cursor:pointer}.avatar{width:42px;height:42px;border-radius:15px;background:#37315f;display:grid;place-items:center;font-size:19px;flex:none}.meta{flex:1;min-width:0}.meta strong{display:block;margin-bottom:5px}.meta small{color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chatbox{height:min(49vh,470px);overflow:auto;display:flex;flex-direction:column;gap:9px;padding:5px 2px 14px}.bubble{max-width:86%;padding:10px 13px;border-radius:16px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}.bubble.me{align-self:flex-start;background:#39315f;border-bottom-left-radius:5px}.bubble.other{align-self:flex-end;background:#282b3b;border-bottom-right-radius:5px}.bubble .time{font-size:10px;color:#b9b8ca;margin-top:4px}.composer{display:flex;gap:8px;align-items:center}.composer .field{min-height:45px}.empty{text-align:center;padding:28px 10px;color:var(--muted);line-height:1.8}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.mini{background:var(--panel2);border-radius:14px;padding:12px}.toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);background:#292b3b;border:1px solid var(--line);padding:11px 15px;border-radius:12px;z-index:10;display:none;max-width:92%;font-size:13px}.hidden{display:none!important}.authbox{max-width:520px;margin:15px auto}.online-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-left:5px}.topactions{display:flex;gap:7px;align-items:center}
+@media(min-width:700px){main{padding:28px 25px 100px}.chatbox{height:470px}.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
-  <div class="app">
-    <header>
-      <h1>الشات</h1>
-      <div class="head-right">
-        <span id="me"></span>
-        <button id="logoutBtn" class="ghost" hidden>خروج</button>
-      </div>
-    </header>
-
-    <section id="login" class="screen">
-      <h2 id="authTitle">ادخل على حسابك</h2>
-      <input id="username" placeholder="اسم المستخدم (إنجليزي أو أرقام)" autocomplete="username" maxlength="20" />
-      <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password" />
-      <div class="error" id="error"></div>
-      <button class="primary" id="authBtn">دخول</button>
-      <button class="text-btn" id="toggleMode">مش عندك حساب؟ سجّل دلوقتي</button>
-    </section>
-
-    <section id="chat" class="screen" hidden>
-      <div id="messages"></div>
-      <form id="form">
-        <input id="text" placeholder="اكتب رسالة" autocomplete="off" maxlength="500" />
-        <button type="submit">إرسال</button>
-      </form>
-    </section>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      updateProfile,
-      signOut,
-      onAuthStateChanged,
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      query,
-      orderBy,
-      limit,
-      onSnapshot,
-      serverTimestamp,
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-    const firebaseConfig = {
-      apiKey: 'AIzaSyBeb4EKVwVuxyBF--V11ehJXrYwm55Ca4Y',
-      authDomain: 'mychat-2f14b.firebaseapp.com',
-      projectId: 'mychat-2f14b',
-      storageBucket: 'mychat-2f14b.firebasestorage.app',
-      messagingSenderId: '122687623931',
-      appId: '1:122687623931:web:f8fbfa0074701e6388965e',
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const $ = (id) => document.getElementById(id);
-    const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
-    const WRONG_LOGIN = 'اسم المستخدم أو كلمة المرور غلط';
-    const ERRORS = {
-      'auth/email-already-in-use': 'الاسم ده محجوز، جرّب اسم تاني',
-      'auth/invalid-credential': WRONG_LOGIN,
-      'auth/wrong-password': WRONG_LOGIN,
-      'auth/user-not-found': WRONG_LOGIN,
-      'auth/weak-password': 'كلمة المرور لازم تكون 6 حروف على الأقل',
-      'auth/too-many-requests': 'محاولات كتير، استنى شوية وجرّب تاني',
-      'auth/network-request-failed': 'مفيش اتصال بالإنترنت',
-      'auth/operation-not-allowed': 'لازم تفعّل Email/Password من Firebase الأول',
-    };
-
-    let mode = 'login';
-    let currentUser = null;
-    let unsubscribe = null;
-
-    // المستخدم بيكتب اسم بس، والإيميل بيتعمل من الاسم في الخلفية
-    const toEmail = (username) => username.toLowerCase() + '@mychat.app';
-    const nameOf = (user) => user.displayName || user.email.split('@')[0];
-
-    function enterChat(user) {
-      currentUser = user;
-      $('login').hidden = true;
-      $('chat').hidden = false;
-      $('logoutBtn').hidden = false;
-      $('me').textContent = nameOf(user);
-
-      if (unsubscribe) unsubscribe();
-      const q = query(
-        collection(db, 'messages'),
-        orderBy('createdAt', 'desc'),
-        limit(100)
-      );
-      unsubscribe = onSnapshot(q, render, (err) => {
-        alert('مش قادر أحمّل الرسايل: ' + err.message);
-      });
-    }
-
-    function leaveChat() {
-      if (unsubscribe) unsubscribe();
-      unsubscribe = null;
-      currentUser = null;
-      $('login').hidden = false;
-      $('chat').hidden = true;
-      $('logoutBtn').hidden = true;
-      $('me').textContent = '';
-      $('messages').innerHTML = '';
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) enterChat(user);
-      else leaveChat();
-    });
-
-    async function submitAuth() {
-      const username = $('username').value.trim();
-      const password = $('password').value;
-      $('error').textContent = '';
-
-      if (!USERNAME_RE.test(username)) {
-        $('error').textContent = 'اسم المستخدم لازم يكون من 3 لـ 20 حرف إنجليزي أو أرقام أو _';
-        return;
-      }
-      if (password.length < 6) {
-        $('error').textContent = 'كلمة المرور لازم تكون 6 حروف على الأقل';
-        return;
-      }
-
-      $('authBtn').disabled = true;
-      try {
-        const email = toEmail(username);
-        if (mode === 'register') {
-          const cred = await createUserWithEmailAndPassword(auth, email, password);
-          await updateProfile(cred.user, { displayName: username });
-          enterChat(auth.currentUser);
-        } else {
-          await signInWithEmailAndPassword(auth, email, password);
-        }
-        $('password').value = '';
-      } catch (err) {
-        $('error').textContent = ERRORS[err.code] || 'حصلت مشكلة: ' + err.code;
-      } finally {
-        $('authBtn').disabled = false;
-      }
-    }
-
-    $('authBtn').onclick = submitAuth;
-    $('password').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') submitAuth();
-    });
-
-    $('toggleMode').onclick = () => {
-      mode = mode === 'login' ? 'register' : 'login';
-      const isLogin = mode === 'login';
-      $('authTitle').textContent = isLogin ? 'ادخل على حسابك' : 'اعمل حساب جديد';
-      $('authBtn').textContent = isLogin ? 'دخول' : 'تسجيل';
-      $('toggleMode').textContent = isLogin
-        ? 'مش عندك حساب؟ سجّل دلوقتي'
-        : 'عندك حساب؟ ادخل من هنا';
-      $('error').textContent = '';
-    };
-
-    $('logoutBtn').onclick = () => signOut(auth);
-
-    function render(snap) {
-      const box = $('messages');
-      box.innerHTML = '';
-
-      for (const d of snap.docs.slice().reverse()) {
-        const m = d.data();
-        const el = document.createElement('div');
-        el.className = 'msg' + (currentUser && m.uid === currentUser.uid ? ' me' : '');
-
-        const who = document.createElement('div');
-        who.className = 'who';
-        who.textContent = m.name;
-
-        const text = document.createElement('div');
-        text.textContent = m.text;
-
-        const time = document.createElement('div');
-        time.className = 'time';
-        const date = m.createdAt ? m.createdAt.toDate() : new Date();
-        time.textContent = date.toLocaleTimeString('ar-EG', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-
-        el.append(who, text, time);
-        box.appendChild(el);
-      }
-      box.scrollTop = box.scrollHeight;
-    }
-
-    $('form').onsubmit = async (e) => {
-      e.preventDefault();
-      const input = $('text');
-      const text = input.value.trim();
-      if (!text || !currentUser) return;
-
-      input.value = '';
-      try {
-        await addDoc(collection(db, 'messages'), {
-          text: text.slice(0, 500),
-          uid: currentUser.uid,
-          name: nameOf(currentUser),
-          createdAt: serverTimestamp(),
-        });
-      } catch (err) {
-        input.value = text;
-        alert('الرسالة متبعتتش: ' + err.message);
-      }
-    };
-  </script>
-</body>
-</html>
+<body><div class="app">
+<header class="top"><div class="brand"><div class="logo">✦</div><div>شاتي الخاص<div class="status"><span class="online-dot"></span><span id="connectionLabel">واجهة التطبيق</span></div></div></div><div class="topactions"><span id="userLabel" class="userline">غير مسجل</span><button id="logoutBtn" class="btn secondary small hidden" onclick="logout()">خروج</button></div></header>
+<main>
+<section id="auth" class="section active"><div class="hero card"><div class="orb">✧</div><h2>مرحبًا بك في شاتي الخاص</h2><div class="muted">سجّل الدخول أو أنشئ حسابًا لتبدأ محادثاتك مع الآخرين.</div></div><div class="card authbox"><div class="heading"><h1 id="authTitle">تسجيل الدخول</h1></div><div id="signupNameWrap" class="hidden"><label>اسم العرض</label><input id="displayName" class="field" placeholder="اسمك الذي سيظهر للآخرين"></div><label>البريد الإلكتروني</label><input id="email" class="field" type="email" autocomplete="email" placeholder="name@example.com"><label>كلمة المرور</label><input id="password" class="field" type="password" autocomplete="current-password" placeholder="6 أحرف على الأقل"><div class="row" style="margin-top:14px"><button id="authSubmit" class="btn" style="flex:1" onclick="submitAuth()">دخول</button><button class="btn secondary" onclick="toggleAuth()" id="authToggle">إنشاء حساب</button></div><div class="hint">يتطلب تسجيل الدخول إعداد رابط Supabase والمفتاح العام في إعدادات التطبيق أولًا.</div></div></section>
+<section id="ai" class="section"><div class="hero card"><div class="orb">✧</div><h2>مساعدك الذكي</h2><div class="muted">اسأل عن أي موضوع، وسيرد عليك المساعد عبر الإنترنت بعد نشر خدمة الذكاء الاصطناعي.</div></div><div class="card"><div id="aiMessages" class="chatbox"><div class="empty">👋 اكتب سؤالك لبدء محادثة مع المساعد.</div></div><div class="composer"><input id="aiInput" class="field" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendAI()"><button class="btn" onclick="sendAI()">إرسال</button></div><div class="hint">يجب نشر Edge Function وإضافة مفتاح مزود الذكاء الاصطناعي كـ Secret على Supabase. لا تضع المفتاح السري في هذه الصفحة.</div></div></section>
+<section id="chats" class="section"><div class="heading"><div><h1>المحادثات</h1><div class="sub">محادثاتك الفردية</div></div><button class="btn" onclick="createRoom('direct')">＋ محادثة</button></div><div id="chatList" class="list"></div></section>
+<section id="groups" class="section"><div class="heading"><div><h1>المجموعات</h1><div class="sub">أنشئ مجموعة وشارك رابط الدعوة</div></div><button class="btn" onclick="createRoom('group')">＋ مجموعة</button></div><div id="groupList" class="list"></div><div class="card hint">يمكن لأي شخص يملك رابط الدعوة الانضمام. شارك الرابط مع الأشخاص المقصودين فقط.</div></section>
+<section id="settings" class="section"><div class="heading"><div><h1>الإعدادات</h1><div class="sub">إعداد الاتصال والخدمات</div></div></div><div class="card"><h3>إعداد Supabase</h3><div class="muted">هذه بيانات المشروع العامة فقط. لا تضع service_role key أو أي مفتاح سري هنا.</div><label>رابط مشروع Supabase</label><input id="sbUrl" class="field" placeholder="https://xxxx.supabase.co" inputmode="url"><label>مفتاح anon / publishable العام</label><input id="sbKey" class="field" placeholder="sb_publishable_... أو anon key"><button class="btn" style="margin-top:12px" onclick="saveConfig()">حفظ والاتصال</button><div id="configStatus" class="hint">لم يتم إعداد الاتصال بعد.</div></div><div class="card"><h3>نسخة احتياطية محلية</h3><div class="muted">تصدير أو استيراد نسخة من الرسائل المحفوظة في هذا المتصفح.</div><div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="btn secondary" onclick="exportLocal()">تصدير</button><label class="btn secondary" style="margin:0;cursor:pointer">استيراد<input type="file" accept="application/json" hidden onchange="importLocal(event)"></label></div></div><div class="card"><h3>حول التطبيق</h3><div class="muted">شاتي الخاص — نسخة HTML مرتبطة بخادم Supabase عند إعداد بيانات المشروع ونشر قاعدة البيانات.</div></div></section>
+<section id="room" class="section"><div class="heading"><button class="btn secondary small" onclick="showTab(currentRoom?.kind==='group'?'groups':'chats')">رجوع</button><div style="flex:1;min-width:0"><h1 id="roomTitle" style="font-size:19px">المحادثة</h1><div class="sub" id="roomSub">متصل</div></div><button class="btn secondary small" onclick="shareInvite()">دعوة</button></div><div class="card"><div id="roomMessages" class="chatbox"></div><div class="composer"><input id="roomInput" class="field" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendRoomMessage()"><button class="btn" onclick="sendRoomMessage()">إرسال</button></div></div></section>
+</main>
+<nav id="tabs" class="tabs hidden"><button class="tab active" data-tab="ai" onclick="showTab('ai')"><span>✧</span>المساعد</button><button class="tab" data-tab="chats" onclick="showTab('chats')"><span>▤</span>المحادثات</button><button class="tab" data-tab="groups" onclick="showTab('groups')"><span>♧</span>المجموعات</button><button class="tab" data-tab="settings" onclick="showTab('settings')"><span>⚙</span>الإعدادات</button></nav><div id="toast" class="toast"></div></div>
+<script>
+const LOCAL_KEY='shaty_connected_local_v1';let localData=readLocal();let supabaseClient=null;let authMode='login';let currentRoom=null;let roomChannel=null;let aiHistory=[];let roomsCache=[];
+function readLocal(){try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{url:'',key:'',backup:[]}}catch(e){return{url:'',key:'',backup:[]}}}function saveLocal(){localStorage.setItem(LOCAL_KEY,JSON.stringify(localData))}function toast(s){const e=document.getElementById('toast');e.textContent=s;e.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',3200)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function showTab(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='chats'||id==='groups')loadRooms();}
+function setSignedIn(user){const yes=!!user;document.getElementById('auth').classList.toggle('active',!yes);document.getElementById('tabs').classList.toggle('hidden',!yes);document.getElementById('logoutBtn').classList.toggle('hidden',!yes);document.getElementById('userLabel').textContent=user?(user.email||'حسابك'):'غير مسجل';if(yes){showTab('ai');handleInviteFromUrl();loadRooms()}else{document.getElementById('auth').classList.add('active');}}
+function toggleAuth(){authMode=authMode==='login'?'signup':'login';document.getElementById('authTitle').textContent=authMode==='login'?'تسجيل الدخول':'إنشاء حساب جديد';document.getElementById('authSubmit').textContent=authMode==='login'?'دخول':'إنشاء الحساب';document.getElementById('authToggle').textContent=authMode==='login'?'إنشاء حساب':'لدي حساب بالفعل';document.getElementById('signupNameWrap').classList.toggle('hidden',authMode!=='signup')}
+function connect(){if(!window.supabase){throw new Error('تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.')}if(!localData.url||!localData.key)throw new Error('أدخل رابط Supabase والمفتاح العام في الإعدادات.');supabaseClient=window.supabase.createClient(localData.url,localData.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});return supabaseClient}
+async function saveConfig(){localData.url=document.getElementById('sbUrl').value.trim().replace(/\/$/,'');localData.key=document.getElementById('sbKey').value.trim();saveLocal();try{connect();const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;document.getElementById('configStatus').textContent='تم الاتصال بمشروع Supabase. يمكنك تسجيل الدخول أو إنشاء حساب.';document.getElementById('configStatus').className='hint good';toast('تم حفظ إعدادات الاتصال');if(data.session)setSignedIn(data.session.user)}catch(e){document.getElementById('configStatus').textContent=e.message;document.getElementById('configStatus').className='hint';toast('تعذر الاتصال: '+e.message)}}
+async function submitAuth(){try{if(!supabaseClient)connect();const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;if(!email||!password)throw new Error('أدخل البريد الإلكتروني وكلمة المرور.');let result;if(authMode==='signup'){const name=document.getElementById('displayName').value.trim();if(!name)throw new Error('اكتب اسم العرض.');result=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:name}}});if(result.error)throw result.error;if(!result.data.session){toast('تم إنشاء الحساب. افحص بريدك لتأكيد التسجيل ثم سجّل الدخول.');return}}else{result=await supabaseClient.auth.signInWithPassword({email,password});if(result.error)throw result.error}setSignedIn(result.data.user);toast('تم تسجيل الدخول بنجاح')}catch(e){toast(e.message||'حدث خطأ أثناء التسجيل')}}
+async function logout(){if(supabaseClient)await supabaseClient.auth.signOut();if(roomChannel){await supabaseClient.removeChannel(roomChannel);roomChannel=null}setSignedIn(null);toast('تم تسجيل الخروج')}
+async function createRoom(kind){try{if(!supabaseClient)connect();const title=prompt(kind==='group'?'اسم المجموعة:':'اسم المحادثة أو الشخص:');if(!title||!title.trim())return;const {data,error}=await supabaseClient.rpc('create_room',{p_title:title.trim(),p_kind:kind});if(error)throw error;await loadRooms();await openRoom(data)}catch(e){toast('تعذر إنشاء المحادثة: '+e.message)}}
+async function loadRooms(){if(!supabaseClient)return;try{const {data,error}=await supabaseClient.from('rooms').select('id,title,kind,invite_code,created_at').order('created_at',{ascending:false});if(error)throw error;roomsCache=data||[];renderRooms()}catch(e){toast('تعذر تحميل المحادثات: '+e.message)}}
+function renderRooms(){for(const [kind,id] of [['direct','chatList'],['group','groupList']]){const list=roomsCache.filter(r=>r.kind===kind);const el=document.getElementById(id);if(!list.length){el.innerHTML='<div class="empty">لا توجد '+(kind==='group'?'مجموعات':'محادثات')+' بعد. اضغط زر الإضافة للبدء.</div>';continue}el.innerHTML=list.map(r=>`<button class="item" onclick="openRoom('${r.id}')"><div class="avatar">${kind==='group'?'♧':'☻'}</div><div class="meta"><strong>${esc(r.title)}</strong><small>${kind==='group'?'مجموعة مشتركة':'محادثة مشتركة'} · اضغط للفتح</small></div><span>‹</span></button>`).join('')}}
+async function openRoom(roomId){try{const room=roomsCache.find(r=>r.id===roomId)||((await supabaseClient.from('rooms').select('id,title,kind,invite_code').eq('id',roomId).single()).data);if(!room)throw new Error('المحادثة غير موجودة أو ليس لديك صلاحية الوصول.');currentRoom=room;document.getElementById('roomTitle').textContent=room.title;document.getElementById('roomSub').textContent=room.kind==='group'?'مجموعة':'محادثة فردية';showTab('room');await loadMessages();if(roomChannel)await supabaseClient.removeChannel(roomChannel);roomChannel=supabaseClient.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},()=>loadMessages()).subscribe();}catch(e){toast('تعذر فتح المحادثة: '+e.message)}}
+async function loadMessages(){if(!currentRoom)return;const {data,error}=await supabaseClient.from('messages').select('id,body,sender_id,created_at').eq('room_id',currentRoom.id).order('created_at',{ascending:true}).limit(300);if(error){toast('تعذر تحميل الرسائل: '+error.message);return}renderMessages(data||[])}
+function renderMessages(rows){const el=document.getElementById('roomMessages');if(!rows.length){el.innerHTML='<div class="empty">ابدأ المحادثة بإرسال أول رسالة.</div>';return}const me=supabaseClient.auth.getUser();el.innerHTML=rows.map(m=>`<div class="bubble ${m.sender_id===window.currentUserId?'me':'other'}">${esc(m.body)}<div class="time">${new Date(m.created_at).toLocaleString('ar-EG')}</div></div>`).join('');el.scrollTop=el.scrollHeight}
+async function sendRoomMessage(){try{const input=document.getElementById('roomInput');const body=input.value.trim();if(!body||!currentRoom)return;input.value='';const {data:{user}}=await supabaseClient.auth.getUser();const {error}=await supabaseClient.from('messages').insert({room_id:currentRoom.id,sender_id:user.id,body});if(error)throw error;await loadMessages()}catch(e){toast('لم تُرسل الرسالة: '+e.message)}}
+async function shareInvite(){if(!currentRoom)return;const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('invite',currentRoom.invite_code);const text='انضم إلى محادثتي في شاتي الخاص: '+url.toString();try{if(navigator.share)await navigator.share({title:'دعوة إلى شاتي الخاص',text,url:url.toString()});else{await navigator.clipboard.writeText(text);toast('تم نسخ رابط الدعوة')}}catch(e){if(e.name!=='AbortError')toast('انسخ الرابط من شريط العنوان بعد استضافة الصفحة.')}}
+async function handleInviteFromUrl(){const code=new URLSearchParams(location.search).get('invite');if(!code||!supabaseClient)return;try{const {data,error}=await supabaseClient.rpc('join_room',{p_invite_code:code});if(error)throw error;history.replaceState({},'',location.pathname);toast('تم الانضمام إلى المحادثة');await loadRooms();await openRoom(data)}catch(e){toast('تعذر استخدام رابط الدعوة: '+e.message)}}
+async function sendAI(){const input=document.getElementById('aiInput'),textValue=input.value.trim();if(!textValue)return;if(!supabaseClient){toast('اضبط اتصال Supabase أولًا.');return}const el=document.getElementById('aiMessages');if(el.querySelector('.empty'))el.innerHTML='';aiHistory.push({role:'user',content:textValue});el.innerHTML+=`<div class="bubble me">${esc(textValue)}<div class="time">الآن</div></div>`;input.value='';try{const {data,error}=await supabaseClient.functions.invoke('chat-ai',{body:{messages:aiHistory.slice(-12)}});if(error)throw error;const answer=data?.reply||'لم يصل رد من المساعد.';aiHistory.push({role:'assistant',content:answer});el.innerHTML+=`<div class="bubble other">${esc(answer)}<div class="time">المساعد الذكي</div></div>`}catch(e){aiHistory.pop();el.innerHTML+=`<div class="bubble other">تعذر الاتصال بالمساعد: ${esc(e.message)}<div class="time">خطأ اتصال</div></div>`}el.scrollTop=el.scrollHeight}
+function exportLocal(){const blob=new Blob([JSON.stringify({url:localData.url,backup:localData.backup},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shaty-settings-backup.json';a.click();URL.revokeObjectURL(a.href)}function importLocal(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(typeof x.url!=='string')throw 0;localData.url=x.url;localData.backup=x.backup||[];saveLocal();document.getElementById('sbUrl').value=localData.url;toast('تم استيراد الإعدادات')}catch(e){toast('ملف النسخة غير صالح')}};r.readAsText(f)}
+async function init(){document.getElementById('sbUrl').value=localData.url||'';document.getElementById('sbKey').value=localData.key||'';if(!localData.url||!localData.key){document.getElementById('connectionLabel').textContent='يلزم إعداد الخادم';return}try{connect();document.getElementById('connectionLabel').textContent='الاتصال مهيأ';const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;supabaseClient.auth.onAuthStateChange((_event,session)=>{window.currentUserId=session?.user?.id||null;setSignedIn(session?.user||null)});window.currentUserId=data.session?.user?.id||null;if(data.session)setSignedIn(data.session.user);else setSignedIn(null)}catch(e){document.getElementById('connectionLabel').textContent='تحقق من الإعدادات';toast(e.message)}}init();
+</script></body></html>
