@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>الشات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #e7e4da;
+      --surface: #f8f7f3;
+      --ink: #1d2331;
+      --muted: #6b7180;
+      --brick: #b8462e;
+      --line: #cfcabb;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'IBM Plex Sans Arabic', Tahoma, sans-serif;
+      font-size: 16px;
+      color: var(--ink);
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+    }
+    button { font: inherit; cursor: pointer; }
+    input { font: inherit; }
+    :focus-visible { outline: 2px solid var(--brick); outline-offset: 2px; }
+
+    .app {
+      width: 100%;
+      max-width: 460px;
+      height: 100%;
+      max-height: 760px;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      border-inline: 1px solid var(--line);
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 2px solid var(--ink);
+    }
+    header h1 { margin: 0; font-size: 20px; font-weight: 600; }
+    .ghost {
+      background: none;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      border-radius: 4px;
+      padding: 4px 12px;
+    }
+
+    #auth {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px 22px;
+    }
+    #auth h2 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+    #auth input,
+    form#send input {
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+    }
+    .primary {
+      padding: 12px;
+      background: var(--ink);
+      color: var(--surface);
+      border: none;
+      border-radius: 4px;
+    }
+    .text-btn {
+      align-self: center;
+      background: none;
+      border: none;
+      color: var(--brick);
+      padding: 6px;
+      text-decoration: underline;
+    }
+    .error { min-height: 22px; color: var(--brick); font-size: 14px; }
+
+    #chat {
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+    }
+    #online {
+      padding: 8px 18px;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg {
+      max-width: 78%;
+      padding: 8px 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      align-self: flex-end;
+      overflow-wrap: anywhere;
+    }
+    .msg.me {
+      align-self: flex-start;
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--surface);
+    }
+    .msg .who { font-size: 13px; font-weight: 600; color: var(--brick); }
+    .msg.me .who { display: none; }
+    .msg .time { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .msg.me .time { color: #a9afbd; }
+    .system {
+      align-self: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    form#send {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 2px solid var(--ink);
+    }
+    form#send input { flex: 1; min-width: 0; }
+    form#send button {
+      padding: 0 18px;
+      background: var(--brick);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>الشات</h1>
+      <button id="logout" class="ghost" hidden>خروج</button>
+    </header>
+
+    <section id="auth">
+      <h2 id="authTitle">ادخل على حسابك</h2>
+      <input id="username" placeholder="اسم المستخدم" autocomplete="username" />
+      <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password" />
+      <div class="error" id="authError"></div>
+      <button class="primary" id="authBtn">دخول</button>
+      <button class="text-btn" id="toggleMode">مش عندك حساب؟ سجّل دلوقتي</button>
+    </section>
+
+    <section id="chat" style="display: none">
+      <div id="online"></div>
+      <div id="messages"></div>
+      <form id="send">
+        <input id="text" placeholder="اكتب رسالة" autocomplete="off" maxlength="500" />
+        <button type="submit">إرسال</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let mode = 'login';
+    let socket = null;
+    let me = null;
+
+    function showScreen(chat) {
+      $('auth').style.display = chat ? 'none' : 'flex';
+      $('chat').style.display = chat ? 'flex' : 'none';
+      $('logout').hidden = !chat;
+    }
+
+    function logout(msg = '') {
+      localStorage.removeItem('chatToken');
+      localStorage.removeItem('chatName');
+      if (socket) socket.disconnect();
+      socket = null;
+      showScreen(false);
+      $('authError').textContent = msg;
+    }
+
+    function startChat(token, name) {
+      me = name;
+      showScreen(true);
+      socket = io({ auth: { token } });
+
+      socket.on('connect_error', (err) => {
+        if (err.message === 'unauthorized') {
+          logout('انتهت الجلسة، سجّل دخول تاني');
+        }
+      });
+      socket.on('history', (msgs) => {
+        $('messages').innerHTML = '';
+        msgs.forEach(addMessage);
+      });
+      socket.on('message', addMessage);
+      socket.on('system', addSystem);
+      socket.on('online', (names) => {
+        $('online').textContent = `متصل الآن: ${names.join('، ')}`;
+      });
+    }
+
+    function addMessage(m) {
+      const box = $('messages');
+      const el = document.createElement('div');
+      el.className = 'msg' + (m.user === me ? ' me' : '');
+
+      const who = document.createElement('div');
+      who.className = 'who';
+      who.textContent = m.user;
+
+      const text = document.createElement('div');
+      text.textContent = m.text;
+
+      const time = document.createElement('div');
+      time.className = 'time';
+      time.textContent = new Date(m.time).toLocaleTimeString('ar-EG', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      el.append(who, text, time);
+      box.appendChild(el);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addSystem(text) {
+      const el = document.createElement('div');
+      el.className = 'system';
+      el.textContent = text;
+      $('messages').appendChild(el);
+    }
+
+    $('toggleMode').onclick = () => {
+      mode = mode === 'login' ? 'register' : 'login';
+      const isLogin = mode === 'login';
+      $('authTitle').textContent = isLogin ? 'ادخل على حسابك' : 'اعمل حساب جديد';
+      $('authBtn').textContent = isLogin ? 'دخول' : 'تسجيل';
+      $('toggleMode').textContent = isLogin
+        ? 'مش عندك حساب؟ سجّل دلوقتي'
+        : 'عندك حساب؟ ادخل من هنا';
+      $('authError').textContent = '';
+    };
+
+    async function submitAuth() {
+      $('authError').textContent = '';
+      const res = await fetch(`/api/${mode}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: $('username').value.trim(),
+          password: $('password').value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        $('authError').textContent = data.error;
+        return;
+      }
+      localStorage.setItem('chatToken', data.token);
+      localStorage.setItem('chatName', data.name);
+      $('password').value = '';
+      startChat(data.token, data.name);
+    }
+
+    $('authBtn').onclick = submitAuth;
+    $('password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAuth();
+    });
+    $('logout').onclick = () => logout();
+
+    $('send').onsubmit = (e) => {
+      e.preventDefault();
+      const input = $('text');
+      const text = input.value.trim();
+      if (!text || !socket) return;
+      socket.emit('message', text);
+      input.value = '';
+    };
+
+    const savedToken = localStorage.getItem('chatToken');
+    if (savedToken) {
+      startChat(savedToken, localStorage.getItem('chatName'));
+    }
+  </script>
+</body>
+</html>
