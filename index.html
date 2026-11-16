@@ -1,522 +1,319 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>الشات</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --paper: #e7e4da;
-      --surface: #f8f7f3;
-      --ink: #1d2331;
-      --muted: #6b7180;
-      --brick: #b8462e;
-      --line: #cfcabb;
-    }
-    * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-    html, body { height: 100%; margin: 0; }
-    body {
-      font-family: 'IBM Plex Sans Arabic', Tahoma, sans-serif;
-      font-size: 16px;
-      color: var(--ink);
-      background: var(--paper);
-      display: grid;
-      place-items: center;
-    }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    button:disabled { opacity: 0.6; cursor: default; }
-    :focus-visible { outline: 2px solid var(--brick); outline-offset: 2px; }
-
-    .app {
-      width: 100%;
-      max-width: 460px;
-      height: 100%;
-      max-height: 760px;
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      border-inline: 1px solid var(--line);
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 18px;
-      border-bottom: 2px solid var(--ink);
-    }
-    header h1 { margin: 0; font-size: 20px; font-weight: 600; }
-    .head-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    #me { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .ghost {
-      background: none;
-      border: 1px solid var(--ink);
-      color: var(--ink);
-      border-radius: 4px;
-      padding: 4px 12px;
-    }
-
-    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-
-    #login {
-      justify-content: center;
-      gap: 12px;
-      padding: 32px 22px;
-    }
-    #login h2 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
-    #login input {
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--ink);
-    }
-    .primary {
-      padding: 12px;
-      background: var(--ink);
-      color: var(--surface);
-      border: none;
-      border-radius: 4px;
-    }
-    .primary:disabled { opacity: 0.6; }
-    .text-btn {
-      align-self: center;
-      background: none;
-      border: none;
-      color: var(--brick);
-      padding: 6px;
-      text-decoration: underline;
-    }
-    .error { min-height: 22px; color: var(--brick); font-size: 14px; }
-
-    #search {
-      margin: 14px 18px 0;
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--ink);
-    }
-    #users {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      padding: 12px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .user {
-      text-align: start;
-      padding: 14px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      color: var(--ink);
-    }
-    .user:hover { border-color: var(--ink); }
-    .empty { color: var(--muted); text-align: center; padding: 24px; }
-
-    .chat-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-    #peer { font-weight: 600; }
-
-    #messages {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      padding: 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .msg {
-      max-width: 78%;
-      padding: 8px 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      align-self: flex-end;
-      overflow-wrap: anywhere;
-    }
-    .msg.me {
-      align-self: flex-start;
-      background: var(--ink);
-      border-color: var(--ink);
-      color: var(--surface);
-    }
-    .msg .time { margin-top: 4px; font-size: 11px; color: var(--muted); }
-    .msg.me .time { color: #a9afbd; }
-
-    form#form {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 2px solid var(--ink);
-    }
-    form#form input {
-      flex: 1;
-      min-width: 0;
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--ink);
-    }
-    form#form button {
-      padding: 0 18px;
-      background: var(--brick);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1416">
+<title>شاتي الخاص</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e1416;--panel:#152024;--line:#223238;--text:#e8efec;--muted:#7f9a9c;--gold:#d9a441;--bubble:#1d2d33}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--ink);color:var(--text)}
+body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:16px}
+button,input{font:inherit;color:inherit}
+.screen{height:100vh;height:100dvh;max-width:720px;margin:0 auto;display:flex;flex-direction:column}
+.bar,.chat-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.bar h1{flex:1;margin:0;font-size:18px;font-weight:700}
+.muted{color:var(--muted);font-size:14px}
+.center{text-align:center}
+.btn{background:var(--gold);color:#17120a;border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+input{width:100%;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.err{min-height:22px;margin:4px 0 0;color:#ff8a7a;font-size:14px}
+.view{flex:1;display:flex;flex-direction:column;min-height:0}
+.section-title{margin:0;padding:14px 16px 8px;color:var(--muted);font-size:14px}
+.composer{display:flex;gap:8px;padding:12px 16px;background:var(--panel);border-top:1px solid var(--line)}
+.list{flex:1;overflow:auto}
+.item{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;background:none;border:0;border-bottom:1px solid var(--line);text-align:start;cursor:pointer}
+.item:hover{background:var(--panel)}
+.avatar{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--bubble);color:var(--gold);font-weight:700}
+.info{flex:1;min-width:0}
+.name{font-weight:600}
+.last{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--muted);font-size:14px}
+.empty{padding:32px 16px;text-align:center;color:var(--muted)}
+.chat-head .name{flex:1}
+.messages{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:16px}
+.bubble{max-width:78%;padding:9px 14px;border-radius:16px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.mine{align-self:flex-start;background:var(--gold);color:#17120a;border-top-right-radius:4px}
+.theirs{align-self:flex-end;background:var(--bubble);border-top-left-radius:4px}
+.auth{justify-content:center;padding:24px}
+.auth-box{width:100%;max-width:360px;margin:0 auto}
+.brand{margin:0 0 6px;text-align:center;font-size:28px;font-weight:700}
+.tabs{display:flex;gap:8px;margin:22px 0 14px}
+.tabs .btn{flex:1}
+.stack{display:flex;flex-direction:column;gap:10px}
+</style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <h1>الشات</h1>
-      <div class="head-right">
-        <span id="me"></span>
-        <button id="logoutBtn" class="ghost" hidden>خروج</button>
-      </div>
-    </header>
 
-    <section id="login" class="screen">
-      <h2 id="authTitle">ادخل على حسابك</h2>
-      <input id="username" placeholder="اسم المستخدم (إنجليزي أو أرقام)" autocomplete="username" maxlength="20" />
-      <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password" />
-      <div class="error" id="error"></div>
-      <button class="primary" id="authBtn">دخول</button>
-      <button class="text-btn" id="toggleMode">مش عندك حساب؟ سجّل دلوقتي</button>
-    </section>
+<section id="auth" class="screen auth">
+  <div class="auth-box">
+    <h1 class="brand">شاتي الخاص</h1>
+    <p class="muted center">الدخول باسم المستخدم وكلمة المرور</p>
+    <div class="tabs">
+      <button class="btn" data-mode="login" type="button">دخول</button>
+      <button class="btn ghost" data-mode="signup" type="button">حساب جديد</button>
+    </div>
+    <form id="authForm" class="stack">
+      <input id="username" dir="ltr" placeholder="اسم المستخدم (إنجليزي، 3 إلى 20 حرفًا)" autocomplete="username" required>
+      <input id="password" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)" autocomplete="current-password" minlength="6" required>
+      <button id="authBtn" class="btn" type="submit">دخول</button>
+      <p id="authErr" class="err"></p>
+    </form>
+  </div>
+</section>
 
-    <section id="home" class="screen" hidden>
-      <input id="search" placeholder="ابحث عن شخص" autocomplete="off" />
-      <div id="users"></div>
-    </section>
+<section id="app" class="screen" hidden>
+  <header class="bar">
+    <button id="back" class="btn ghost" type="button" hidden>رجوع</button>
+    <h1>شاتي الخاص</h1>
+    <span id="me" class="muted"></span>
+    <button id="logout" class="btn ghost" type="button">خروج</button>
+  </header>
 
-    <section id="chat" class="screen" hidden>
-      <div class="chat-head">
-        <button id="back" class="ghost">رجوع</button>
-        <span id="peer"></span>
-      </div>
-      <div id="messages"></div>
-      <form id="form">
-        <input id="text" placeholder="اكتب رسالة" autocomplete="off" maxlength="500" />
-        <button type="submit">إرسال</button>
-      </form>
-    </section>
+  <div id="listView" class="view" hidden>
+    <h2 class="section-title">الغرف</h2>
+    <div id="roomList" class="list"></div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      updateProfile,
-      signOut,
-      onAuthStateChanged,
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import {
-      getFirestore,
-      collection,
-      doc,
-      getDoc,
-      setDoc,
-      addDoc,
-      query,
-      orderBy,
-      limitToLast,
-      onSnapshot,
-      serverTimestamp,
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  <div id="chatView" class="view" hidden>
+    <div class="chat-head">
+      <span id="chatTitle" class="name"></span>
+    </div>
+    <div id="messages" class="messages"></div>
+    <form id="sendForm" class="composer">
+      <input id="msgInput" placeholder="اكتب رسالة" autocomplete="off">
+      <button class="btn" type="submit">إرسال</button>
+    </form>
+  </div>
+</section>
 
-    const firebaseConfig = {
-      apiKey: 'AIzaSyBeb4EKVwVuxyBF--V11ehJXrYwm55Ca4Y',
-      authDomain: 'mychat-2f14b.firebaseapp.com',
-      projectId: 'mychat-2f14b',
-      storageBucket: 'mychat-2f14b.firebasestorage.app',
-      messagingSenderId: '122687623931',
-      appId: '1:122687623931:web:f8fbfa0074701e6388965e',
-    };
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, collection, query,
+  orderBy, limit, onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+/* ضع هنا إعدادات تطبيق الويب من Firebase */
+const firebaseConfig = {
+  apiKey: "PUT_API_KEY",
+  authDomain: "PUT_AUTH_DOMAIN",
+  projectId: "PUT_PROJECT_ID",
+  storageBucket: "PUT_STORAGE_BUCKET",
+  messagingSenderId: "PUT_SENDER_ID",
+  appId: "PUT_APP_ID",
+};
 
-    const $ = (id) => document.getElementById(id);
-    const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
-    const WRONG_LOGIN = 'اسم المستخدم أو كلمة المرور غلط';
-    const ERRORS = {
-      'auth/email-already-in-use': 'الاسم ده محجوز، جرّب اسم تاني',
-      'auth/invalid-credential': WRONG_LOGIN,
-      'auth/wrong-password': WRONG_LOGIN,
-      'auth/user-not-found': WRONG_LOGIN,
-      'auth/weak-password': 'كلمة المرور لازم تكون 6 حروف على الأقل',
-      'auth/too-many-requests': 'محاولات كتير، استنى شوية وجرّب تاني',
-      'auth/network-request-failed': 'مفيش اتصال بالإنترنت',
-      'auth/operation-not-allowed': 'لازم تفعّل Email/Password من Firebase الأول',
-    };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    let mode = 'login';
-    let registering = false;
-    let me = null;          // { uid, name }
-    let peer = null;        // الشخص اللي بتكلمه { uid, name }
-    let allUsers = [];
-    let unsubUsers = null;
-    let unsubMessages = null;
+/* نطاق داخلي وهمي: المستخدم يدخل باسم المستخدم فقط ولا يرى هذا النطاق */
+const DOMAIN = "shat.app";
 
-    // المستخدم بيكتب اسم بس، والإيميل بيتعمل من الاسم في الخلفية
-    const toEmail = (username) => username.toLowerCase() + '@mychat.app';
-    const nameOf = (user) => user.displayName || user.email.split('@')[0];
-    // كل محادثة ليها ID ثابت للشخصين، فالشخصين دايماً بيوصلوا لنفس المحادثة
-    const chatIdFor = (a, b) => [a, b].sort().join('_');
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
 
-    function show(screen) {
-      $('login').hidden = screen !== 'login';
-      $('home').hidden = screen !== 'home';
-      $('chat').hidden = screen !== 'chat';
-      $('logoutBtn').hidden = screen === 'login';
-      $('me').textContent = me ? me.name : '';
+const ERRORS = {
+  "auth/invalid-credential": "اسم المستخدم أو كلمة المرور غير صحيحة",
+  "auth/email-already-in-use": "اسم المستخدم مأخوذ، جرّب اسمًا آخر",
+  "auth/weak-password": "كلمة المرور قصيرة، استخدم 6 أحرف على الأقل",
+  "auth/network-request-failed": "تحقق من اتصال الإنترنت",
+  "auth/operation-not-allowed": "فعّل Email/Password في Firebase Authentication",
+  "auth/configuration-not-found": "فعّل Email/Password في Firebase Authentication",
+  "auth/unauthorized-domain": "أضف نطاق GitHub Pages إلى Authorized domains في Firebase",
+  "permission-denied": "لا توجد صلاحية. تأكد من نشر قواعد Firestore وإنشاء settings/owner",
+};
+const errText = e => ERRORS[e.code] || e.message || "حدث خطأ غير متوقع";
+
+let me = null;            // { uid, username, isOwner }
+let roomId = null;        // معرّف الغرفة المفتوحة = uid صاحب الغرفة
+let mode = "login";
+let unsubRooms = null, unsubMsgs = null;
+
+/* تبديل بين الدخول وإنشاء الحساب */
+document.querySelectorAll("[data-mode]").forEach(btn => btn.onclick = () => {
+  mode = btn.dataset.mode;
+  document.querySelectorAll("[data-mode]").forEach(b => b.className = b === btn ? "btn" : "btn ghost");
+  $("authBtn").textContent = mode === "login" ? "دخول" : "إنشاء الحساب";
+  $("authErr").textContent = "";
+});
+
+$("authForm").onsubmit = async e => {
+  e.preventDefault();
+  const username = $("username").value.trim().toLowerCase();
+  const password = $("password").value;
+  $("authErr").textContent = "";
+  if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+    $("authErr").textContent = "اسم المستخدم: من 3 إلى 20 حرفًا إنجليزيًا أو أرقام أو _";
+    return;
+  }
+  $("authBtn").disabled = true;
+  try {
+    const email = `${username}@${DOMAIN}`;
+    if (mode === "login") await signInWithEmailAndPassword(auth, email, password);
+    else await createUserWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    $("authErr").textContent = errText(err);
+  } finally {
+    $("authBtn").disabled = false;
+  }
+};
+
+$("logout").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async user => {
+  stopAll();
+  if (!user) {
+    me = null;
+    roomId = null;
+    $("app").hidden = true;
+    $("auth").hidden = false;
+    $("listView").hidden = true;
+    $("chatView").hidden = true;
+    $("roomList").textContent = "";
+    $("messages").textContent = "";
+    return;
+  }
+  try {
+    const username = user.email.split("@")[0];
+    const ownerSnap = await getDoc(doc(db, "settings", "owner"));
+    const isOwner = ownerSnap.exists() && ownerSnap.data().uid === user.uid;
+    me = { uid: user.uid, username, isOwner };
+
+    $("me").textContent = isOwner ? `الصاحب: ${username}` : username;
+    $("auth").hidden = true;
+    $("app").hidden = false;
+
+    if (isOwner) {
+      $("listView").hidden = false;
+      listenRooms();
+    } else {
+      // غرفة خاصة بهذا المستخدم مع الصاحب، تُنشأ أو تُحدَّث عند الدخول
+      await setDoc(doc(db, "rooms", user.uid), { userUid: user.uid, username }, { merge: true });
+      openRoom(user.uid, "صاحب الشات");
     }
+  } catch (err) {
+    $("authErr").textContent = errText(err);
+  }
+});
 
-    function stopListeners() {
-      if (unsubUsers) unsubUsers();
-      if (unsubMessages) unsubMessages();
-      unsubUsers = null;
-      unsubMessages = null;
-    }
+function stopAll() {
+  unsubRooms?.();
+  unsubMsgs?.();
+  unsubRooms = null;
+  unsubMsgs = null;
+}
 
-    async function enterHome(user) {
-      stopListeners();
-      me = { uid: user.uid, name: nameOf(user) };
+/* الصاحب فقط: قائمة كل الغرف مرتبة حسب آخر رسالة */
+function listenRooms() {
+  unsubRooms?.();
+  unsubRooms = onSnapshot(collection(db, "rooms"),
+    snap => {
+      const items = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(r => r.id !== me.uid)
+        .sort((a, b) => (b.lastAt?.toMillis?.() ?? 0) - (a.lastAt?.toMillis?.() ?? 0));
+      renderRooms(items);
+    },
+    err => { $("roomList").replaceChildren(el("p", "empty", errText(err))); }
+  );
+}
 
-      // بنسجل الحساب في قايمة الأشخاص لو مش موجود
-      try {
-        const ref = doc(db, 'users', user.uid);
-        const snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, { uid: user.uid, name: me.name, createdAt: serverTimestamp() });
-        }
-      } catch (err) {
-        alert('حصلت مشكلة في حفظ الحساب: ' + err.message);
-      }
+function renderRooms(items) {
+  const list = $("roomList");
+  list.textContent = "";
+  if (!items.length) {
+    list.append(el("p", "empty", "لا توجد غرف بعد. ستظهر هنا عندما يدخل أحد المستخدمين"));
+    return;
+  }
+  for (const r of items) {
+    const name = r.username || "مستخدم";
+    const info = el("div", "info");
+    info.append(el("div", "name", name), el("div", "last", r.lastText || "لا توجد رسائل بعد"));
+    const row = el("button", "item");
+    row.type = "button";
+    row.append(el("div", "avatar", name.charAt(0).toUpperCase()), info);
+    row.onclick = () => openRoom(r.id, name);
+    list.append(row);
+  }
+}
 
-      show('home');
-      startUsers();
-    }
+function openRoom(id, title) {
+  roomId = id;
+  $("chatTitle").textContent = title;
+  $("listView").hidden = true;
+  $("chatView").hidden = false;
+  $("back").hidden = !me.isOwner;
+  listenMessages();
+}
 
-    function leaveAll() {
-      stopListeners();
-      me = null;
-      peer = null;
-      allUsers = [];
-      $('users').innerHTML = '';
-      show('login');
-    }
+$("back").onclick = () => {
+  unsubMsgs?.();
+  roomId = null;
+  $("chatView").hidden = true;
+  $("listView").hidden = false;
+};
 
-    onAuthStateChanged(auth, (user) => {
-      if (registering) return; // التسجيل بيكمل الخطوات بنفسه
-      if (user) enterHome(user);
-      else leaveAll();
-    });
-
-    async function submitAuth() {
-      const username = $('username').value.trim();
-      const password = $('password').value;
-      $('error').textContent = '';
-
-      if (!USERNAME_RE.test(username)) {
-        $('error').textContent = 'اسم المستخدم لازم يكون من 3 لـ 20 حرف إنجليزي أو أرقام أو _';
+/* الرسائل بالوقت الفعلي، آخر 100 رسالة في الغرفة */
+function listenMessages() {
+  unsubMsgs?.();
+  const q = query(
+    collection(db, "rooms", roomId, "messages"),
+    orderBy("createdAt", "desc"),
+    limit(100)
+  );
+  unsubMsgs = onSnapshot(q,
+    snap => {
+      const box = $("messages");
+      box.textContent = "";
+      if (snap.empty) {
+        box.append(el("p", "empty", "لا توجد رسائل بعد. اكتب أول رسالة"));
         return;
       }
-      if (password.length < 6) {
-        $('error').textContent = 'كلمة المرور لازم تكون 6 حروف على الأقل';
-        return;
-      }
-
-      $('authBtn').disabled = true;
-      try {
-        const email = toEmail(username);
-        if (mode === 'register') {
-          registering = true;
-          const cred = await createUserWithEmailAndPassword(auth, email, password);
-          await updateProfile(cred.user, { displayName: username });
-          registering = false;
-          await enterHome(auth.currentUser);
-        } else {
-          await signInWithEmailAndPassword(auth, email, password);
-        }
-        $('password').value = '';
-      } catch (err) {
-        $('error').textContent = ERRORS[err.code] || 'حصلت مشكلة: ' + err.code;
-      } finally {
-        registering = false;
-        $('authBtn').disabled = false;
-      }
-    }
-
-    $('authBtn').onclick = submitAuth;
-    $('password').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') submitAuth();
-    });
-
-    $('toggleMode').onclick = () => {
-      mode = mode === 'login' ? 'register' : 'login';
-      const isLogin = mode === 'login';
-      $('authTitle').textContent = isLogin ? 'ادخل على حسابك' : 'اعمل حساب جديد';
-      $('authBtn').textContent = isLogin ? 'دخول' : 'تسجيل';
-      $('toggleMode').textContent = isLogin
-        ? 'مش عندك حساب؟ سجّل دلوقتي'
-        : 'عندك حساب؟ ادخل من هنا';
-      $('error').textContent = '';
-    };
-
-    $('logoutBtn').onclick = () => signOut(auth);
-
-    // قايمة الأشخاص
-    function startUsers() {
-      unsubUsers = onSnapshot(
-        collection(db, 'users'),
-        (snap) => {
-          allUsers = snap.docs
-            .map((d) => d.data())
-            .filter((u) => u.uid !== me.uid)
-            .sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-          renderUsers();
-        },
-        (err) => alert('مش قادر أحمّل قايمة الأشخاص: ' + err.message)
-      );
-    }
-
-    function renderUsers() {
-      const box = $('users');
-      const q = $('search').value.trim().toLowerCase();
-      const list = allUsers.filter((u) => u.name.toLowerCase().includes(q));
-      box.innerHTML = '';
-
-      if (!list.length) {
-        const empty = document.createElement('div');
-        empty.className = 'empty';
-        empty.textContent = allUsers.length ? 'مفيش نتيجة' : 'لسه مفيش حد غيرك';
-        box.appendChild(empty);
-        return;
-      }
-
-      for (const u of list) {
-        const btn = document.createElement('button');
-        btn.className = 'user';
-        btn.textContent = u.name;
-        btn.onclick = () => openChat(u);
-        box.appendChild(btn);
-      }
-    }
-
-    $('search').addEventListener('input', renderUsers);
-
-    // المحادثة الخاصة
-    async function openChat(other) {
-      peer = other;
-      const chatId = chatIdFor(me.uid, other.uid);
-      $('peer').textContent = other.name;
-      $('messages').innerHTML = '';
-      show('chat');
-
-      if (unsubMessages) unsubMessages();
-      unsubMessages = null;
-
-      try {
-        const ref = doc(db, 'chats', chatId);
-        const snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, { participants: [me.uid, other.uid].sort() });
-        }
-      } catch (err) {
-        alert('ما قدرتش أفتح المحادثة: ' + err.message);
-        return;
-      }
-
-      const q = query(
-        collection(db, 'chats', chatId, 'messages'),
-        orderBy('createdAt', 'asc'),
-        limitToLast(100)
-      );
-      unsubMessages = onSnapshot(q, render, (err) => {
-        alert('مش قادر أحمّل الرسايل: ' + err.message);
-      });
-    }
-
-    $('back').onclick = () => {
-      if (unsubMessages) unsubMessages();
-      unsubMessages = null;
-      peer = null;
-      show('home');
-    };
-
-    function render(snap) {
-      const box = $('messages');
-      box.innerHTML = '';
-
-      for (const d of snap.docs) {
+      [...snap.docs].reverse().forEach(d => {
         const m = d.data();
-        const el = document.createElement('div');
-        el.className = 'msg' + (m.uid === me.uid ? ' me' : '');
-
-        const text = document.createElement('div');
-        text.textContent = m.text;
-
-        const time = document.createElement('div');
-        time.className = 'time';
-        const date = m.createdAt ? m.createdAt.toDate() : new Date();
-        time.textContent = date.toLocaleTimeString('ar-EG', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-
-        el.append(text, time);
-        box.appendChild(el);
-      }
+        box.append(el("div", "bubble " + (m.senderId === me.uid ? "mine" : "theirs"), m.text));
+      });
       box.scrollTop = box.scrollHeight;
-    }
+    },
+    err => { $("messages").replaceChildren(el("p", "empty", errText(err))); }
+  );
+}
 
-    $('form').onsubmit = async (e) => {
-      e.preventDefault();
-      const input = $('text');
-      const text = input.value.trim();
-      if (!text || !peer || !me) return;
-
-      input.value = '';
-      try {
-        await addDoc(collection(db, 'chats', chatIdFor(me.uid, peer.uid), 'messages'), {
-          text: text.slice(0, 500),
-          uid: me.uid,
-          name: me.name,
-          createdAt: serverTimestamp(),
-        });
-      } catch (err) {
-        input.value = text;
-        alert('الرسالة متبعتتش: ' + err.message);
-      }
-    };
-  </script>
+$("sendForm").onsubmit = async e => {
+  e.preventDefault();
+  const input = $("msgInput");
+  const text = input.value.trim();
+  if (!text || !roomId) return;
+  input.value = "";
+  try {
+    const ref = doc(db, "rooms", roomId);
+    await addDoc(collection(ref, "messages"), {
+      text, senderId: me.uid, createdAt: serverTimestamp()
+    });
+    await updateDoc(ref, { lastText: text.slice(0, 80), lastAt: serverTimestamp() });
+  } catch (err) {
+    input.value = text;
+    alert(errText(err));
+  }
+};
+</script>
 </body>
 </html>
