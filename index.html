@@ -12,7 +12,7 @@
 <body><div class="app">
 <header class="top"><div class="brand"><div class="logo">✦</div><div>شاتي الخاص<div class="status"><span class="online-dot"></span><span id="connectionLabel">واجهة التطبيق</span></div></div></div><div class="topactions"><span id="userLabel" class="userline">غير مسجل</span><button id="logoutBtn" class="btn secondary small hidden" onclick="logout()">خروج</button></div></header>
 <main>
-<section id="auth" class="section active"><div class="hero card"><div class="orb">✧</div><h2>مرحبًا بك في شاتي الخاص</h2><div class="muted">سجّل الدخول أو أنشئ حسابًا لتبدأ محادثاتك مع الآخرين.</div></div><div class="card authbox"><div class="heading"><h1 id="authTitle">تسجيل الدخول</h1></div><div id="signupNameWrap" class="hidden"><label>اسم العرض</label><input id="displayName" class="field" placeholder="اسمك الذي سيظهر للآخرين"></div><label>البريد الإلكتروني</label><input id="email" class="field" type="email" autocomplete="email" placeholder="name@example.com"><label>كلمة المرور</label><input id="password" class="field" type="password" autocomplete="current-password" placeholder="6 أحرف على الأقل"><div class="row" style="margin-top:14px"><button id="authSubmit" class="btn" style="flex:1" onclick="submitAuth()">دخول</button><button class="btn secondary" onclick="toggleAuth()" id="authToggle">إنشاء حساب</button></div><div class="hint">يتطلب تسجيل الدخول إعداد رابط Supabase والمفتاح العام في إعدادات التطبيق أولًا.</div></div></section>
+<section id="auth" class="section active"><div class="hero card"><div class="orb">✧</div><h2>مرحبًا بك في شاتي الخاص</h2><div class="muted">سجّل الدخول أو أنشئ حسابًا لتبدأ محادثاتك مع الآخرين.</div></div><div class="card authbox"><div class="heading"><h1 id="authTitle">تسجيل الدخول</h1></div><div id="signupNameWrap" class="hidden"><label>اسم العرض</label><input id="displayName" class="field" placeholder="اسمك الذي سيظهر للآخرين"></div><label>البريد الإلكتروني</label><input id="email" class="field" type="email" autocomplete="email" placeholder="name@example.com"><label>كلمة المرور</label><input id="password" class="field" type="password" autocomplete="current-password" placeholder="6 أحرف على الأقل"><div class="row" style="margin-top:14px"><button id="authSubmit" class="btn" style="flex:1" onclick="submitAuth()">دخول</button><button class="btn secondary" onclick="toggleAuth()" id="authToggle">إنشاء حساب</button></div><div class="hint" id="authHint">يتطلب تسجيل الدخول إعداد رابط Supabase والمفتاح العام في إعدادات التطبيق أولًا.</div></div></section>
 <section id="ai" class="section"><div class="hero card"><div class="orb">✧</div><h2>مساعدك الذكي</h2><div class="muted">اسأل عن أي موضوع، وسيرد عليك المساعد عبر الإنترنت بعد نشر خدمة الذكاء الاصطناعي.</div></div><div class="card"><div id="aiMessages" class="chatbox"><div class="empty">👋 اكتب سؤالك لبدء محادثة مع المساعد.</div></div><div class="composer"><input id="aiInput" class="field" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendAI()"><button class="btn" onclick="sendAI()">إرسال</button></div><div class="hint">يجب نشر Edge Function وإضافة مفتاح مزود الذكاء الاصطناعي كـ Secret على Supabase. لا تضع المفتاح السري في هذه الصفحة.</div></div></section>
 <section id="chats" class="section"><div class="heading"><div><h1>المحادثات</h1><div class="sub">محادثاتك الفردية</div></div><button class="btn" onclick="createRoom('direct')">＋ محادثة</button></div><div id="chatList" class="list"></div></section>
 <section id="groups" class="section"><div class="heading"><div><h1>المجموعات</h1><div class="sub">أنشئ مجموعة وشارك رابط الدعوة</div></div><button class="btn" onclick="createRoom('group')">＋ مجموعة</button></div><div id="groupList" class="list"></div><div class="card hint">يمكن لأي شخص يملك رابط الدعوة الانضمام. شارك الرابط مع الأشخاص المقصودين فقط.</div></section>
@@ -21,24 +21,108 @@
 </main>
 <nav id="tabs" class="tabs hidden"><button class="tab active" data-tab="ai" onclick="showTab('ai')"><span>✧</span>المساعد</button><button class="tab" data-tab="chats" onclick="showTab('chats')"><span>▤</span>المحادثات</button><button class="tab" data-tab="groups" onclick="showTab('groups')"><span>♧</span>المجموعات</button><button class="tab" data-tab="settings" onclick="showTab('settings')"><span>⚙</span>الإعدادات</button></nav><div id="toast" class="toast"></div></div>
 <script>
-const LOCAL_KEY='shaty_connected_local_v1';let localData=readLocal();let supabaseClient=null;let authMode='login';let currentRoom=null;let roomChannel=null;let aiHistory=[];let roomsCache=[];
-function readLocal(){try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{url:'',key:'',backup:[]}}catch(e){return{url:'',key:'',backup:[]}}}function saveLocal(){localStorage.setItem(LOCAL_KEY,JSON.stringify(localData))}function toast(s){const e=document.getElementById('toast');e.textContent=s;e.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',3200)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function showTab(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='chats'||id==='groups')loadRooms();}
-function setSignedIn(user){const yes=!!user;document.getElementById('auth').classList.toggle('active',!yes);document.getElementById('tabs').classList.toggle('hidden',!yes);document.getElementById('logoutBtn').classList.toggle('hidden',!yes);document.getElementById('userLabel').textContent=user?(user.email||'حسابك'):'غير مسجل';if(yes){showTab('ai');handleInviteFromUrl();loadRooms()}else{document.getElementById('auth').classList.add('active');}}
+// === تم وضع رابط مشروعك هنا تلقائياً ===
+const DEFAULT_SUPABASE_URL = 'https://ospdvsktknkttolhfsne.supabase.co';
+// === الصق المفتاح العام (Publishable key) هنا بين علامتي التنصيص ===
+const DEFAULT_SUPABASE_KEY = 'الصق_المفتاح_الذي_نسخته_هنا';
+// =======================================
+
+const LOCAL_KEY='shaty_connected_local_v1';
+let localData=readLocal();
+if(!localData.url && DEFAULT_SUPABASE_URL.startsWith('http')){
+  localData.url = DEFAULT_SUPABASE_URL.trim().replace(/\/$/,'');
+  localData.key = DEFAULT_SUPABASE_KEY.trim();
+  saveLocal();
+}
+
+let supabaseClient=null;let authMode='login';let currentRoom=null;let roomChannel=null;let aiHistory=[];let roomsCache=[];
+
+function readLocal(){try{return JSON.parse(localStorage.getItem(LOCAL_KEY))||{url:'',key:'',backup:[]}}catch(e){return{url:'',key:'',backup:[]}}}
+function saveLocal(){localStorage.setItem(LOCAL_KEY,JSON.stringify(localData))}
+function toast(s){const e=document.getElementById('toast');e.textContent=s;e.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',3200)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showTab(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='chats'||id==='groups')loadRooms();}
+
+function setSignedIn(user){
+  const yes=!!user;
+  window.currentUserId=user?.id||null;
+  document.getElementById('auth').classList.toggle('active',!yes);
+  document.getElementById('tabs').classList.toggle('hidden',!yes);
+  document.getElementById('logoutBtn').classList.toggle('hidden',!yes);
+  document.getElementById('userLabel').textContent=user?(user.email||'حسابك'):'غير مسجل';
+  if(yes){showTab('ai');handleInviteFromUrl();loadRooms()}else{document.getElementById('auth').classList.add('active');}
+}
+
 function toggleAuth(){authMode=authMode==='login'?'signup':'login';document.getElementById('authTitle').textContent=authMode==='login'?'تسجيل الدخول':'إنشاء حساب جديد';document.getElementById('authSubmit').textContent=authMode==='login'?'دخول':'إنشاء الحساب';document.getElementById('authToggle').textContent=authMode==='login'?'إنشاء حساب':'لدي حساب بالفعل';document.getElementById('signupNameWrap').classList.toggle('hidden',authMode!=='signup')}
-function connect(){if(!window.supabase){throw new Error('تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.')}if(!localData.url||!localData.key)throw new Error('أدخل رابط Supabase والمفتاح العام في الإعدادات.');supabaseClient=window.supabase.createClient(localData.url,localData.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});return supabaseClient}
-async function saveConfig(){localData.url=document.getElementById('sbUrl').value.trim().replace(/\/$/,'');localData.key=document.getElementById('sbKey').value.trim();saveLocal();try{connect();const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;document.getElementById('configStatus').textContent='تم الاتصال بمشروع Supabase. يمكنك تسجيل الدخول أو إنشاء حساب.';document.getElementById('configStatus').className='hint good';toast('تم حفظ إعدادات الاتصال');if(data.session)setSignedIn(data.session.user)}catch(e){document.getElementById('configStatus').textContent=e.message;document.getElementById('configStatus').className='hint';toast('تعذر الاتصال: '+e.message)}}
-async function submitAuth(){try{if(!supabaseClient)connect();const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;if(!email||!password)throw new Error('أدخل البريد الإلكتروني وكلمة المرور.');let result;if(authMode==='signup'){const name=document.getElementById('displayName').value.trim();if(!name)throw new Error('اكتب اسم العرض.');result=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:name}}});if(result.error)throw result.error;if(!result.data.session){toast('تم إنشاء الحساب. افحص بريدك لتأكيد التسجيل ثم سجّل الدخول.');return}}else{result=await supabaseClient.auth.signInWithPassword({email,password});if(result.error)throw result.error}setSignedIn(result.data.user);toast('تم تسجيل الدخول بنجاح')}catch(e){toast(e.message||'حدث خطأ أثناء التسجيل')}}
+
+function connect(){
+  if(!window.supabase){throw new Error('تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.')}
+  if(!localData.url||!localData.key)throw new Error('أدخل رابط Supabase والمفتاح العام في الإعدادات.');
+  supabaseClient=window.supabase.createClient(localData.url,localData.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  document.getElementById('connectionLabel').textContent='متصل بالخادم';
+  document.getElementById('authHint').style.display='none';
+  return supabaseClient;
+}
+
+async function saveConfig(){
+  localData.url=document.getElementById('sbUrl').value.trim().replace(/\/$/,'');
+  localData.key=document.getElementById('sbKey').value.trim();
+  saveLocal();
+  try{
+    connect();
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error)throw error;
+    document.getElementById('configStatus').textContent='تم الاتصال بمشروع Supabase. يمكنك تسجيل الدخول أو إنشاء حساب.';
+    document.getElementById('configStatus').className='hint good';
+    toast('تم حفظ إعدادات الاتصال');
+    if(data.session)setSignedIn(data.session.user);
+  }catch(e){
+    document.getElementById('configStatus').textContent=e.message;
+    document.getElementById('configStatus').className='hint';
+    toast('تعذر الاتصال: '+e.message);
+  }
+}
+
+async function submitAuth(){
+  try{
+    if(!supabaseClient)connect();
+    const email=document.getElementById('email').value.trim();
+    const password=document.getElementById('password').value;
+    if(!email||!password)throw new Error('أدخل البريد الإلكتروني وكلمة المرور.');
+    let result;
+    if(authMode==='signup'){
+      const name=document.getElementById('displayName').value.trim();
+      if(!name)throw new Error('اكتب اسم العرض.');
+      result=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:name}}});
+      if(result.error)throw result.error;
+      if(!result.data.session){toast('تم إنشاء الحساب. افحص بريدك لتأكيد التسجيل ثم سجّل الدخول.');return}
+    }else{
+      result=await supabaseClient.auth.signInWithPassword({email,password});
+      if(result.error)throw result.error;
+    }
+    setSignedIn(result.data.user);
+    toast('تم تسجيل الدخول بنجاح');
+  }catch(e){toast(e.message||'حدث خطأ أثناء التسجيل')}
+}
+
 async function logout(){if(supabaseClient)await supabaseClient.auth.signOut();if(roomChannel){await supabaseClient.removeChannel(roomChannel);roomChannel=null}setSignedIn(null);toast('تم تسجيل الخروج')}
+
 async function createRoom(kind){try{if(!supabaseClient)connect();const title=prompt(kind==='group'?'اسم المجموعة:':'اسم المحادثة أو الشخص:');if(!title||!title.trim())return;const {data,error}=await supabaseClient.rpc('create_room',{p_title:title.trim(),p_kind:kind});if(error)throw error;await loadRooms();await openRoom(data)}catch(e){toast('تعذر إنشاء المحادثة: '+e.message)}}
+
 async function loadRooms(){if(!supabaseClient)return;try{const {data,error}=await supabaseClient.from('rooms').select('id,title,kind,invite_code,created_at').order('created_at',{ascending:false});if(error)throw error;roomsCache=data||[];renderRooms()}catch(e){toast('تعذر تحميل المحادثات: '+e.message)}}
+
 function renderRooms(){for(const [kind,id] of [['direct','chatList'],['group','groupList']]){const list=roomsCache.filter(r=>r.kind===kind);const el=document.getElementById(id);if(!list.length){el.innerHTML='<div class="empty">لا توجد '+(kind==='group'?'مجموعات':'محادثات')+' بعد. اضغط زر الإضافة للبدء.</div>';continue}el.innerHTML=list.map(r=>`<button class="item" onclick="openRoom('${r.id}')"><div class="avatar">${kind==='group'?'♧':'☻'}</div><div class="meta"><strong>${esc(r.title)}</strong><small>${kind==='group'?'مجموعة مشتركة':'محادثة مشتركة'} · اضغط للفتح</small></div><span>‹</span></button>`).join('')}}
-async function openRoom(roomId){try{const room=roomsCache.find(r=>r.id===roomId)||((await supabaseClient.from('rooms').select('id,title,kind,invite_code').eq('id',roomId).single()).data);if(!room)throw new Error('المحادثة غير موجودة أو ليس لديك صلاحية الوصول.');currentRoom=room;document.getElementById('roomTitle').textContent=room.title;document.getElementById('roomSub').textContent=room.kind==='group'?'مجموعة':'محادثة فردية';showTab('room');await loadMessages();if(roomChannel)await supabaseClient.removeChannel(roomChannel);roomChannel=supabaseClient.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},()=>loadMessages()).subscribe();}catch(e){toast('تعذر فتح المحادثة: '+e.message)}}
+
+async function openRoom(roomId){try{const room=roomsCache.find(r=>r.id===roomId)||((await supabaseClient.from('rooms').select('id,title,kind,invite_code').eq('id',roomId).single()).data);if(!room)throw new Error('المحادثة غير موجودة أو ليس لديك صلاحية الوصول.');currentRoom=room;document.getElementById('roomTitle').textContent=room.title;document.getElementById('roomSub').textContent=room.kind==='group'?'مجموعة':'محادثة فردية';showTab('room');await loadMessages();if(roomChannel)await supabaseClient.removeChannel(roomChannel);roomChannel=supabaseClient.channel('room-'+room.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room_id=eq.'+room.id},()=>loadMessages()).subscribe();}catch(e){toast('تعذر فتح المححادثة: '+e.message)}}
+
 async function loadMessages(){if(!currentRoom)return;const {data,error}=await supabaseClient.from('messages').select('id,body,sender_id,created_at').eq('room_id',currentRoom.id).order('created_at',{ascending:true}).limit(300);if(error){toast('تعذر تحميل الرسائل: '+error.message);return}renderMessages(data||[])}
-function renderMessages(rows){const el=document.getElementById('roomMessages');if(!rows.length){el.innerHTML='<div class="empty">ابدأ المحادثة بإرسال أول رسالة.</div>';return}const me=supabaseClient.auth.getUser();el.innerHTML=rows.map(m=>`<div class="bubble ${m.sender_id===window.currentUserId?'me':'other'}">${esc(m.body)}<div class="time">${new Date(m.created_at).toLocaleString('ar-EG')}</div></div>`).join('');el.scrollTop=el.scrollHeight}
+
+function renderMessages(rows){const el=document.getElementById('roomMessages');if(!rows.length){el.innerHTML='<div class="empty">ابدأ المحادثة بإرسال أول رسالة.</div>';return}el.innerHTML=rows.map(m=>`<div class="bubble ${m.sender_id===window.currentUserId?'me':'other'}">${esc(m.body)}<div class="time">${new Date(m.created_at).toLocaleString('ar-EG')}</div></div>`).join('');el.scrollTop=el.scrollHeight}
+
 async function sendRoomMessage(){try{const input=document.getElementById('roomInput');const body=input.value.trim();if(!body||!currentRoom)return;input.value='';const {data:{user}}=await supabaseClient.auth.getUser();const {error}=await supabaseClient.from('messages').insert({room_id:currentRoom.id,sender_id:user.id,body});if(error)throw error;await loadMessages()}catch(e){toast('لم تُرسل الرسالة: '+e.message)}}
+
 async function shareInvite(){if(!currentRoom)return;const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('invite',currentRoom.invite_code);const text='انضم إلى محادثتي في شاتي الخاص: '+url.toString();try{if(navigator.share)await navigator.share({title:'دعوة إلى شاتي الخاص',text,url:url.toString()});else{await navigator.clipboard.writeText(text);toast('تم نسخ رابط الدعوة')}}catch(e){if(e.name!=='AbortError')toast('انسخ الرابط من شريط العنوان بعد استضافة الصفحة.')}}
+
 async function handleInviteFromUrl(){const code=new URLSearchParams(location.search).get('invite');if(!code||!supabaseClient)return;try{const {data,error}=await supabaseClient.rpc('join_room',{p_invite_code:code});if(error)throw error;history.replaceState({},'',location.pathname);toast('تم الانضمام إلى المحادثة');await loadRooms();await openRoom(data)}catch(e){toast('تعذر استخدام رابط الدعوة: '+e.message)}}
-async function sendAI(){const input=document.getElementById('aiInput'),textValue=input.value.trim();if(!textValue)return;if(!supabaseClient){toast('اضبط اتصال Supabase أولًا.');return}const el=document.getElementById('aiMessages');if(el.querySelector('.empty'))el.innerHTML='';aiHistory.push({role:'user',content:textValue});el.innerHTML+=`<div class="bubble me">${esc(textValue)}<div class="time">الآن</div></div>`;input.value='';try{const {data,error}=await supabaseClient.functions.invoke('chat-ai',{body:{messages:aiHistory.slice(-12)}});if(error)throw error;const answer=data?.reply||'لم يصل رد من المساعد.';aiHistory.push({role:'assistant',content:answer});el.innerHTML+=`<div class="bubble other">${esc(answer)}<div class="time">المساعد الذكي</div></div>`}catch(e){aiHistory.pop();el.innerHTML+=`<div class="bubble other">تعذر الاتصال بالمساعد: ${esc(e.message)}<div class="time">خطأ اتصال</div></div>`}el.scrollTop=el.scrollHeight}
-function exportLocal(){const blob=new Blob([JSON.stringify({url:localData.url,backup:localData.backup},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shaty-settings-backup.json';a.click();URL.revokeObjectURL(a.href)}function importLocal(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(typeof x.url!=='string')throw 0;localData.url=x.url;localData.backup=x.backup||[];saveLocal();document.getElementById('sbUrl').value=localData.url;toast('تم استيراد الإعدادات')}catch(e){toast('ملف النسخة غير صالح')}};r.readAsText(f)}
-async function init(){document.getElementById('sbUrl').value=localData.url||'';document.getElementById('sbKey').value=localData.key||'';if(!localData.url||!localData.key){document.getElementById('connectionLabel').textContent='يلزم إعداد الخادم';return}try{connect();document.getElementById('connectionLabel').textContent='الاتصال مهيأ';const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;supabaseClient.auth.onAuthStateChange((_event,session)=>{window.currentUserId=session?.user?.id||null;setSignedIn(session?.user||null)});window.currentUserId=data.session?.user?.id||null;if(data.session)setSignedIn(data.session.user);else setSignedIn(null)}catch(e){document.getElementById('connectionLabel').textContent='تحقق من الإعدادات';toast(e.message)}}init();
-</script></body></html>
+
+async function sendAI(){const input=document.getElementById('aiInput'),textValue=input.value.trim();if(!textValue)return;if(!supabaseClient){toast('اضبط اتصال Supabase أولًا.');return}const el=document.getElementById('aiMessages');if(el.querySelector('.empty'))el.innerHTML='';aiHistory.push({role:'user',content:textValue});el.innerHTML+=`<div class="bubble me">${esc(textValue)}<div class="time">الآن</div></div>`;input.value='';try{const {data,error}=await supabaseClient.functions.invoke('chat-ai',{body:{messages:aiHistory.slice(-12)}});if(error)throw error;const answer=data?.reply||'لم يصل رد من المساعد.';aiHis
